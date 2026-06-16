@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>StemPrint Demo</title>
+    <title>🫆 StemPrint Demo</title>
     <style>
       :root {
         color-scheme: light;
@@ -188,6 +188,7 @@
         font-size: 14px;
         font-weight: 700;
         background: var(--panel);
+        text-align: center;
       }
 
       th:first-child,
@@ -202,8 +203,45 @@
         font-weight: 700;
         line-height: 1.35;
         padding: 12px;
-        text-align: left;
+        text-align: center;
         vertical-align: middle;
+      }
+
+      .paper-figure {
+        margin: 34px 0 0;
+      }
+
+      .paper-figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .authors {
+        margin: 18px 0 0;
+        color: var(--ink);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .authors span {
+        color: var(--muted);
+      }
+
+      .case-alert {
+        max-width: 920px;
+        margin-bottom: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.55;
+      }
+
+      .case-alert.red {
+        color: #b42318;
+      }
+
+      .case-alert.blue {
+        color: #175cd3;
       }
 
       .model-id {
@@ -258,13 +296,20 @@
     <main>
       <header>
         <p class="eyebrow">Review-stage demo</p>
-        <h1>StemPrint Demo</h1>
+        <h1>🫆 StemPrint Demo</h1>
         <p class="lead">
           Demo page for the paper "StemPrint: Stem-Aware Audio Fingerprinting
           for Automatic Sample Identification." This page presents qualitative
           retrieval cases with ranking results, model summaries, and selected
           query-reference audio segments.
         </p>
+        <p class="authors">
+          Jongsoo Kim, Woojin Kang, and Juhan Nam<br>
+          <span>Graduate School of Culture Technology, KAIST</span>
+        </p>
+        <figure class="paper-figure">
+          <img src="figure.png" alt="StemPrint framework overview">
+        </figure>
       </header>
 
       <section>
@@ -280,42 +325,41 @@
 
       <section class="cases" id="cases"></section>
 
-      <footer>
-        Author information is omitted during the review stage.
-      </footer>
     </main>
     <script>
       const tracks = {
-        T002: "Les Demerle - A Day in the Life",
-        T003: "David Axelrod - Holy Thursday",
-        T004: "Lil Wayne - Dr. Carter",
-        T005: "Clyde McPhatter - Mixed Up Cup",
-        T006: "Common - In My Own World (Check the Method)",
-        T007: "Monty Alexander - Love and Happiness",
-        T011: "Bill Withers - Grandma's Hands",
-        T014: "Menahan Street Band - Make the Road by Walking",
-        T015: "Lou Reed - Walk on the Wild Side",
-        T021: "The Whispers - And the Beat Goes On",
-        T025: "The Charmels - As Long as I've Got You",
-        T029: "Wendy Rene - After Laughter (Comes Tears)",
-        T040: "Freddie Scott - You Got What I Need",
-        T051: "Nas - Memory Lane (Sittin' in Da Park)",
-        T060: "Bobby Caldwell - Open Your Eyes",
-        T061: "Common - The Light",
-        T062: "Dido - Thank You",
-        T063: "Eminem - Stan",
-        T070: "Hossam Ramzy - Khusara Khusara",
-        T083: "James Brown - Funky Drummer",
-        T104: "Lamont Dozier - Take off your make up",
-        T109: "DJ Qbert - Eight",
-        T112: "Rufus Thomas - The Breakdown (part 2)",
-        T119: "Orange Krush - Action",
-        T145: "Barry White - I'm gonna love you just a little more baby",
-        T148: "Johnny Pate - Shaft in Africa",
-        T152: "Nas - One Mic",
-        T160: "Bobby Byrd - I Know You Got Soul",
-        T162: "Joe Tex - Papa Was Too",
-        T193: "Dyke & The Blazers - Let a woman be a woman let a man be a man"
+        T002: { name: "Les Demerle - A Day in the Life", detail: "Les Demerle, A Day in the Life, 1968, Jazz" },
+        T003: { name: "David Axelrod - Holy Thursday", detail: "David Axelrod, Holy Thursday, 1968, Jazz" },
+        T004: { name: "Lil Wayne - Dr. Carter", detail: "Lil Wayne, Dr. Carter, 2008, Hip-hop" },
+        T005: { name: "Clyde McPhatter - Mixed Up Cup", detail: "Clyde McPhatter, Mixed Up Cup, 1970, R&B/Soul" },
+        T006: { name: "Common - In My Own World (Check the Method)", detail: "Common, In My Own World (Check the Method), 1994, Hip-hop" },
+        T007: { name: "Monty Alexander - Love and Happiness", detail: "Monty Alexander, Love and Happiness, 1974, Jazz" },
+        T011: { name: "Bill Withers - Grandma's Hands", detail: "Bill Withers, Grandma's Hands, 1971, R&B/Soul" },
+        T014: { name: "Menahan Street Band - Make the Road by Walking", detail: "Menahan Street Band, Make the Road by Walking, 2006, World" },
+        T015: { name: "Lou Reed - Walk on the Wild Side", detail: "Lou Reed, Walk on the Wild Side, 1971, Rock" },
+        T021: { name: "The Whispers - And the Beat Goes On", detail: "The Whispers, And the Beat Goes On, 1980, Disco" },
+        T025: { name: "The Charmels - As Long as I've Got You", detail: "The Charmels, As Long as I've Got You, 1967, R&B/Soul" },
+        T029: { name: "Wendy Rene - After Laughter (Comes Tears)", detail: "Wendy Rene, After Laughter (Comes Tears), 1964, R&B/Soul" },
+        T040: { name: "Freddie Scott - You Got What I Need", detail: "Freddie Scott, You Got What I Need, 1968, R&B/Soul" },
+        T051: { name: "Nas - Memory Lane (Sittin' in Da Park)", detail: "Nas, Memory Lane (Sittin' in Da Park), 1994, Hip-hop" },
+        T052: { name: "Lee Dorsey - Get Out of My Life Woman", detail: "Lee Dorsey, Get Out of My Life Woman, 1966, R&B/Soul" },
+        T060: { name: "Bobby Caldwell - Open Your Eyes", detail: "Bobby Caldwell, Open Your Eyes, 1980, Jazz" },
+        T061: { name: "Common - The Light", detail: "Common, The Light, 2000, Hip-hop" },
+        T062: { name: "Dido - Thank You", detail: "Dido, Thank You, 2000, Pop" },
+        T063: { name: "Eminem - Stan", detail: "Eminem, Stan, 2000, Hip-hop" },
+        T070: { name: "Hossam Ramzy - Khusara Khusara", detail: "Hossam Ramzy, Khusara Khusara, 1994, World" },
+        T083: { name: "James Brown - Funky Drummer", detail: "James Brown, Funky Drummer, 1970, Funk" },
+        T104: { name: "Lamont Dozier - Take off your make up", detail: "Lamont Dozier, Take off your make up, 1973, R&B/Soul" },
+        T108: { name: "Gary Numan - Films", detail: "Gary Numan, Films, 1979, Rock" },
+        T109: { name: "DJ Qbert - Eight", detail: "DJ Qbert, Eight, 1994, Hip-hop" },
+        T112: { name: "Rufus Thomas - The Breakdown (part 2)", detail: "Rufus Thomas, The Breakdown (part 2), 1971, R&B/Soul" },
+        T119: { name: "Orange Krush - Action", detail: "Orange Krush, Action, 1982, Funk" },
+        T145: { name: "Barry White - I'm gonna love you just a little more baby", detail: "Barry White, I'm gonna love you just a little more baby, 1973, R&B/Soul" },
+        T148: { name: "Johnny Pate - Shaft in Africa", detail: "Johnny Pate, Shaft in Africa, 1973, R&B/Soul" },
+        T152: { name: "Nas - One Mic", detail: "Nas, One Mic, 2001, Hip-hop" },
+        T160: { name: "Bobby Byrd - I Know You Got Soul", detail: "Bobby Byrd, I Know You Got Soul, 1971, R&B/Soul" },
+        T162: { name: "Joe Tex - Papa Was Too", detail: "Joe Tex, Papa Was Too, 1966, R&B/Soul" },
+        T193: { name: "Dyke & The Blazers - Let a woman be a woman let a man be a man", detail: "Dyke & The Blazers, Let a woman be a woman let a man be a man, 1969, Funk" }
       };
 
       const cases = [
@@ -332,6 +376,25 @@
             M1: { type: "mixture", referenceTrack: "T007" },
             M2: { type: "mixture", referenceTrack: "T007" },
             M3: { type: "mixture", referenceTrack: "T014" }
+          }
+        },
+        {
+          sampleId: "S124",
+          queryTrack: "T051",
+          referenceTrack: "T052",
+          alerts: [
+            { color: "red", text: "Although S1, S4, and S5 incorrectly rank T162 at top-1, the predicted drum segment sounds highly similar to the sampled query segment." },
+            { color: "blue", text: "This case helps explain why S4 can obtain higher top-3 hit-rate behavior than S1." }
+          ],
+          rows: {
+            S1: { type: "drums", referenceTrack: "T162" },
+            S2: { type: "drums", referenceTrack: "T002" },
+            S3: { type: "bass", referenceTrack: "T029" },
+            S4: { type: "drums", referenceTrack: "T162" },
+            S5: { type: "drums", referenceTrack: "T162" },
+            M1: { type: "mixture", referenceTrack: "T007" },
+            M2: { type: "mixture", referenceTrack: "T025" },
+            M3: { type: "mixture", referenceTrack: "T029" }
           }
         },
         {
@@ -380,22 +443,6 @@
           }
         },
         {
-          sampleId: "S124",
-          queryTrack: "T051",
-          referenceTrack: "T162",
-          note: "A short case where S4 can exceed S1 in top-3 hit-rate behavior.",
-          rows: {
-            S1: { type: "drums", referenceTrack: "T162" },
-            S2: { type: "drums", referenceTrack: "T002" },
-            S3: { type: "bass", referenceTrack: "T029" },
-            S4: { type: "drums", referenceTrack: "T162" },
-            S5: { type: "drums", referenceTrack: "T162" },
-            M1: { type: "mixture", referenceTrack: "T007" },
-            M2: { type: "mixture", referenceTrack: "T025" },
-            M3: { type: "mixture", referenceTrack: "T029" }
-          }
-        },
-        {
           sampleId: "S002",
           mode: "Easy Mode",
           queryTrack: "T004",
@@ -415,7 +462,7 @@
           sampleId: "S067",
           mode: "Hard Mode",
           queryTrack: "T109",
-          referenceTrack: "T070",
+          referenceTrack: "T108",
           rows: {
             S1: { type: "drums", referenceTrack: "T070" },
             S2: { type: "other", referenceTrack: "T015" },
@@ -441,7 +488,7 @@
 
         return `
           <audio controls preload="none" src="${audioPath(sample.sampleId, modelId, row.type, role, trackId)}"></audio>
-          <span class="track-meta">${trackId} · ${tracks[trackId]}</span>
+          <span class="track-meta">${trackId}: ${tracks[trackId].name}</span>
           ${stem}
         `;
       }
@@ -474,6 +521,20 @@
         }).join("");
       }
 
+      function trackTitle(trackId) {
+        return `${trackId}: ${tracks[trackId].name}`;
+      }
+
+      function trackDetail(trackId) {
+        return `${trackId}: ${tracks[trackId].detail}`;
+      }
+
+      function renderAlerts(sample) {
+        return (sample.alerts || []).map((alert) => `
+          <p class="case-alert ${alert.color}">${alert.text}</p>
+        `).join("");
+      }
+
       function renderCase(sample) {
         const rows = [
           `<tr class="group-row"><td colspan="3">Stem-Level Fingerprint</td></tr>`,
@@ -485,13 +546,14 @@
         return `
           <article class="case" id="${sample.sampleId}">
             <div class="case-heading">
-              <h2>${sample.sampleId}) ${tracks[sample.queryTrack]}</h2>
+              <h2>[${sample.sampleId}] ${trackTitle(sample.queryTrack)}</h2>
               ${sample.mode ? `<span class="mode-badge">${sample.mode}</span>` : ""}
             </div>
             <p class="reference">
-              Ground-truth reference: ${tracks[sample.referenceTrack]}
+              Ground-truth reference: ${trackDetail(sample.referenceTrack)}
             </p>
-            ${sample.note ? `<p class="case-note">${sample.note}</p>` : `<div class="case-note"></div>`}
+            ${renderAlerts(sample)}
+            <div class="case-note"></div>
 
             <div class="figure-pair" aria-label="${sample.sampleId} figures">
               <figure>
