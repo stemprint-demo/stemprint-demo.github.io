@@ -129,13 +129,8 @@
         width: 100%;
         height: 430px;
         object-fit: contain;
+        object-position: left center;
         background: #ffffff;
-      }
-
-      figcaption {
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 14px;
       }
 
       .audio-table-wrap {
@@ -171,7 +166,7 @@
       }
 
       .group-row td {
-        background: var(--panel);
+        background: transparent;
         color: var(--ink);
         font-size: 15px;
         font-weight: 700;
@@ -246,16 +241,10 @@
         <h2>Overview</h2>
         <p>
           StemPrint separates music into source stems and compares stem-level
-          fingerprints to improve track-level sample retrieval.
-        </p>
-      </section>
-
-      <section>
-        <h2>Examples</h2>
-        <p>
-          Each case shows the ranking figure and summary figure side by side,
-          followed by audio segments selected from the highest-scoring
-          query-reference segment pair for each model.
+          fingerprints to improve track-level sample retrieval. Each case
+          shows ranking and summary figures side by side, followed by audio
+          segments selected from the highest-scoring query-reference segment
+          pair for each model.
         </p>
       </section>
 
@@ -393,11 +382,9 @@
             <div class="figure-pair" aria-label="${sample.sampleId} figures">
               <figure>
                 <img src="final_case_figures/${sample.sampleId}_rank.png" alt="${sample.sampleId} ranking results">
-                <figcaption>Ranking results</figcaption>
               </figure>
               <figure>
                 <img src="final_case_figures/${sample.sampleId}_summary.png" alt="${sample.sampleId} summary results">
-                <figcaption>Model summary</figcaption>
               </figure>
             </div>
 
