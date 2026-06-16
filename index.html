@@ -129,8 +129,6 @@
         width: 100%;
         height: 430px;
         object-fit: contain;
-        border: 1px solid var(--line);
-        border-radius: 8px;
         background: #ffffff;
       }
 
@@ -169,31 +167,26 @@
 
       th:first-child,
       td:first-child {
-        width: 160px;
-      }
-
-      th:nth-child(2),
-      td:nth-child(2) {
         width: 96px;
       }
 
-      .representation {
+      .group-row td {
         background: var(--panel);
         color: var(--ink);
-        font-size: 13px;
+        font-size: 15px;
         font-weight: 700;
         line-height: 1.35;
-        text-align: center;
+        padding: 12px;
+        text-align: left;
         vertical-align: middle;
       }
 
       .model-id {
         display: inline-flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         min-width: 44px;
-        min-height: 34px;
+        min-height: 30px;
         border-radius: 6px;
         background: var(--accent-soft);
         color: var(--accent);
@@ -201,11 +194,12 @@
       }
 
       .model-note {
-        margin-top: 2px;
+        display: block;
+        margin-top: 6px;
         color: var(--muted);
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 700;
-        line-height: 1.1;
+        line-height: 1.2;
       }
 
       audio {
@@ -242,8 +236,9 @@
         <h1>StemPrint Demo</h1>
         <p class="lead">
           Demo page for the paper "StemPrint: Stem-Aware Audio Fingerprinting
-          for Automatic Sample Identification." Audio examples, retrieval
-          comparisons, and visual analyses will be added here for the review.
+          for Automatic Sample Identification." This page presents qualitative
+          retrieval cases with ranking results, model summaries, and selected
+          query-reference audio segments.
         </p>
       </header>
 
@@ -286,8 +281,6 @@
         T179: "Beastie Boys - Brass Monkey",
         T180: "Wild Sugar - Bring it Here"
       };
-
-      const modelOrder = ["S1", "S2", "S3", "S4", "S5", "M1", "M2", "M3"];
 
       const cases = [
         {
@@ -364,17 +357,16 @@
         return `
           <span class="model-id">
             ${modelId}
-            ${note ? `<span class="model-note">${note}</span>` : ""}
           </span>
+          ${note ? `<span class="model-note">${note}</span>` : ""}
         `;
       }
 
-      function renderRows(sample, models, representation) {
-        return models.map((modelId, index) => {
+      function renderRows(sample, models) {
+        return models.map((modelId) => {
           const row = sample.rows[modelId];
           return `
             <tr>
-              ${index === 0 ? `<td class="representation" rowspan="${models.length}">${representation}</td>` : ""}
               <td>${modelLabel(modelId)}</td>
               <td>${audioCell(sample, modelId, row, "query")}</td>
               <td>${audioCell(sample, modelId, row, "reference")}</td>
@@ -385,13 +377,15 @@
 
       function renderCase(sample) {
         const rows = [
-          renderRows(sample, ["S1", "S2", "S3", "S4", "S5"], "Stem-Level Fingerprint"),
-          renderRows(sample, ["M1", "M2", "M3"], "Mixture-Level Fingerprint")
+          `<tr class="group-row"><td colspan="3">Stem-Level Fingerprint</td></tr>`,
+          renderRows(sample, ["S1", "S2", "S3", "S4", "S5"]),
+          `<tr class="group-row"><td colspan="3">Mixture-Level Fingerprint</td></tr>`,
+          renderRows(sample, ["M1", "M2", "M3"])
         ].join("");
 
         return `
           <article class="case" id="${sample.sampleId}">
-            <h2>${sample.sampleId} · ${tracks[sample.queryTrack]}</h2>
+            <h2>${sample.sampleId}) ${tracks[sample.queryTrack]}</h2>
             <p class="reference">
               Ground-truth reference: ${tracks[sample.referenceTrack]}
             </p>
@@ -411,7 +405,6 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Representation</th>
                     <th>Model</th>
                     <th>Query</th>
                     <th>Top-1 reference</th>
