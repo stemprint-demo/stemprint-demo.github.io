@@ -63,9 +63,10 @@
 
       .paper-title {
         margin: 18px 0 0;
-        color: var(--ink);
-        font-size: 24px;
-        font-weight: 700;
+        color: #3f454b;
+        font-size: 21px;
+        font-style: italic;
+        font-weight: 600;
         line-height: 1.35;
       }
 
@@ -224,6 +225,14 @@
         height: auto;
       }
 
+      .paper-figure figcaption {
+        margin: 14px auto 0;
+        width: 80%;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
       .authors {
         margin: 18px 0 0;
         color: var(--ink);
@@ -296,6 +305,13 @@
         color: var(--muted);
         font-size: 14px;
       }
+
+      .references {
+        border-bottom: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
     </style>
   </head>
   <body>
@@ -304,8 +320,8 @@
         <p class="eyebrow">Review-stage demo</p>
         <h1>🫆 StemPrint Demo</h1>
         <p class="paper-title">
-          StemPrint: Stem-Aware Audio Fingerprinting for Automatic Sample
-          Identification
+          "StemPrint: Stem-Aware Audio Fingerprinting for Automatic Sample
+          Identification"
         </p>
         <p class="authors">
           Jongsoo Kim, Woojin Kang, and Juhan Nam<br>
@@ -313,6 +329,18 @@
         </p>
         <figure class="paper-figure">
           <img src="figure.png" alt="StemPrint framework overview">
+          <figcaption>
+            Overview of StemPrint. (a) Sampling-aware synthetic mixtures are
+            constructed by sampling stems from different clean songs and
+            applying stem-wise effects. (b) The model is trained in the
+            separated-stem domain using contrastive learning between
+            corresponding separated stems from the original song and the
+            synthetic mixture. (c) At inference time, query stems are
+            independently fingerprinted and matched against stem-specific
+            databases, and the resulting scores are aggregated to obtain the
+            final ranking. PIT, TIM, EQ, and RVB+DLY denote pitch shifting,
+            time stretching, equalization, and reverb plus delay, respectively.
+          </figcaption>
         </figure>
       </header>
 
@@ -329,6 +357,17 @@
       </section>
 
       <section class="cases" id="cases"></section>
+
+      <section class="references">
+        <h2>References</h2>
+        <p>
+          [1] Baseline (M1): A. Bhattacharjee, I. M. Higgs, M. Sandler, and
+          E. Benetos, "Refining music sample identification with a
+          self-supervised graph neural network," Proceedings of the 26th
+          International Society for Music Information Retrieval Conference,
+          pp. 511-517, 2025.
+        </p>
+      </section>
 
     </main>
     <script>
