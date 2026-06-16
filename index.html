@@ -204,6 +204,10 @@
         width: 96px;
       }
 
+      tbody td:first-child {
+        text-align: center;
+      }
+
       .group-row td {
         background: transparent;
         color: var(--ink);
@@ -580,6 +584,12 @@
         `).join("");
       }
 
+      function modeLabel(mode) {
+        if (mode === "Easy Mode") return "😎 Easy Mode";
+        if (mode === "Hard Mode") return "😵‍💫 Hard Mode";
+        return mode;
+      }
+
       function renderCase(sample) {
         const rows = [
           `<tr class="group-row"><td colspan="3">Stem-Level Fingerprint</td></tr>`,
@@ -592,7 +602,7 @@
           <article class="case" id="${sample.sampleId}">
             <div class="case-heading">
               <h2>[${sample.sampleId}] ${trackTitle(sample.queryTrack)}</h2>
-              ${sample.mode ? `<span class="mode-badge">${sample.mode}</span>` : ""}
+              ${sample.mode ? `<span class="mode-badge">${modeLabel(sample.mode)}</span>` : ""}
             </div>
             <p class="reference">
               Ground-truth reference: ${trackDetail(sample.referenceTrack)}
