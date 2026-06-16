@@ -12,6 +12,7 @@
         --line: #d7dee6;
         --panel: #f7f9fb;
         --accent: #176f7a;
+        --accent-soft: #e7f3f5;
       }
 
       * {
@@ -27,7 +28,7 @@
       }
 
       main {
-        width: min(960px, calc(100% - 40px));
+        width: min(1180px, calc(100% - 40px));
         margin: 0 auto;
         padding: 64px 0;
       }
@@ -88,6 +89,121 @@
         color: var(--muted);
       }
 
+      .cases {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .case {
+        padding: 44px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .case:first-child {
+        border-top: 0;
+      }
+
+      .case h2 {
+        margin-bottom: 8px;
+      }
+
+      .reference {
+        margin-bottom: 24px;
+      }
+
+      .figure-pair {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(420px, 1fr));
+        gap: 20px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      figure {
+        margin: 0;
+        min-width: 0;
+      }
+
+      figure img {
+        display: block;
+        width: 100%;
+        height: 430px;
+        object-fit: contain;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      figcaption {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .audio-table-wrap {
+        margin-top: 28px;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 14px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 700;
+        background: var(--panel);
+      }
+
+      th:first-child,
+      td:first-child {
+        width: 96px;
+      }
+
+      .model-id {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 30px;
+        border-radius: 6px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      audio {
+        display: block;
+        width: 100%;
+        max-width: 430px;
+      }
+
+      .track-meta,
+      .stem-meta {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .stem-meta {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
       footer {
         padding-top: 24px;
         color: var(--muted);
@@ -118,15 +234,149 @@
       <section>
         <h2>Examples</h2>
         <p>
-          Query, reference, baseline, and stem-aware retrieval examples will be
-          listed here.
+          Each case shows the ranking figure and summary figure side by side,
+          followed by audio segments selected from the highest-scoring
+          query-reference segment pair for each model.
         </p>
-        <div class="placeholder">Demo assets coming soon.</div>
       </section>
+
+      <section class="cases" id="cases"></section>
 
       <footer>
         Author information is omitted during the review stage.
       </footer>
     </main>
+    <script>
+      const tracks = {
+        T007: "Monty Alexander - Love and Happiness",
+        T011: "Bill Withers - Grandma's Hands",
+        T015: "Lou Reed - Walk on the Wild Side",
+        T021: "The Whispers - And the Beat Goes On",
+        T060: "Bobby Caldwell - Open Your Eyes",
+        T061: "Common - The Light",
+        T062: "Dido - Thank You",
+        T063: "Eminem - Stan",
+        T070: "Hossam Ramzy - Khusara Khusara",
+        T104: "Lamont Dozier - Take off your make up",
+        T119: "Orange Krush - Action",
+        T179: "Beastie Boys - Brass Monkey",
+        T180: "Wild Sugar - Bring it Here"
+      };
+
+      const modelOrder = ["S1", "S2", "S3", "S4", "S5", "M1", "M2", "M3"];
+
+      const cases = [
+        {
+          sampleId: "S037",
+          queryTrack: "T061",
+          referenceTrack: "T060",
+          rows: {
+            S1: { type: "bass", referenceTrack: "T060" },
+            S2: { type: "bass", referenceTrack: "T060" },
+            S3: { type: "bass", referenceTrack: "T060" },
+            S4: { type: "bass", referenceTrack: "T060" },
+            S5: { type: "bass", referenceTrack: "T060" },
+            M1: { type: "mixture", referenceTrack: "T007" },
+            M2: { type: "mixture", referenceTrack: "T007" },
+            M3: { type: "mixture", referenceTrack: "T060" }
+          }
+        },
+        {
+          sampleId: "S038",
+          queryTrack: "T063",
+          referenceTrack: "T062",
+          rows: {
+            S1: { type: "drums", referenceTrack: "T062" },
+            S2: { type: "drums", referenceTrack: "T062" },
+            S3: { type: "drums", referenceTrack: "T062" },
+            S4: { type: "drums", referenceTrack: "T062" },
+            S5: { type: "drums", referenceTrack: "T104" },
+            M1: { type: "mixture", referenceTrack: "T015" },
+            M2: { type: "mixture", referenceTrack: "T015" },
+            M3: { type: "mixture", referenceTrack: "T011" }
+          }
+        },
+        {
+          sampleId: "S103",
+          queryTrack: "T179",
+          referenceTrack: "T180",
+          rows: {
+            S1: { type: "drums", referenceTrack: "T180" },
+            S2: { type: "drums", referenceTrack: "T180" },
+            S3: { type: "drums", referenceTrack: "T021" },
+            S4: { type: "drums", referenceTrack: "T180" },
+            S5: { type: "other", referenceTrack: "T119" },
+            M1: { type: "mixture", referenceTrack: "T070" },
+            M2: { type: "mixture", referenceTrack: "T070" },
+            M3: { type: "mixture", referenceTrack: "T070" }
+          }
+        }
+      ];
+
+      function audioPath(sampleId, modelId, type, role, trackId) {
+        return `final_case_audios/${sampleId}_${modelId}_${type}_${role}_${trackId}_segment.wav`;
+      }
+
+      function audioCell(sample, modelId, row, role) {
+        const trackId = role === "query" ? sample.queryTrack : row.referenceTrack;
+        const stem = modelId.startsWith("S")
+          ? `<span class="stem-meta">Stem: ${row.type}</span>`
+          : "";
+
+        return `
+          <audio controls preload="none" src="${audioPath(sample.sampleId, modelId, row.type, role, trackId)}"></audio>
+          <span class="track-meta">${trackId} · ${tracks[trackId]}</span>
+          ${stem}
+        `;
+      }
+
+      function renderCase(sample) {
+        const rows = modelOrder.map((modelId) => {
+          const row = sample.rows[modelId];
+          return `
+            <tr>
+              <td><span class="model-id">${modelId}</span></td>
+              <td>${audioCell(sample, modelId, row, "query")}</td>
+              <td>${audioCell(sample, modelId, row, "reference")}</td>
+            </tr>
+          `;
+        }).join("");
+
+        return `
+          <article class="case" id="${sample.sampleId}">
+            <h2>${tracks[sample.queryTrack]}</h2>
+            <p class="reference">
+              Ground-truth reference: ${tracks[sample.referenceTrack]}
+            </p>
+
+            <div class="figure-pair" aria-label="${sample.sampleId} figures">
+              <figure>
+                <img src="final_case_figures/${sample.sampleId}_rank.png" alt="${sample.sampleId} ranking results">
+                <figcaption>Ranking results</figcaption>
+              </figure>
+              <figure>
+                <img src="final_case_figures/${sample.sampleId}_summary.png" alt="${sample.sampleId} summary results">
+                <figcaption>Model summary</figcaption>
+              </figure>
+            </div>
+
+            <div class="audio-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>Query</th>
+                    <th>Top-1 reference</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </article>
+        `;
+      }
+
+      document.getElementById("cases").innerHTML = cases.map(renderCase).join("");
+    </script>
   </body>
 </html>
