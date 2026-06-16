@@ -176,6 +176,11 @@
         overflow-x: auto;
       }
 
+      .gt-table-wrap {
+        margin-top: 24px;
+        overflow-x: auto;
+      }
+
       table {
         width: 100%;
         min-width: 760px;
@@ -206,6 +211,26 @@
 
       tbody td:first-child {
         text-align: center;
+      }
+
+      .gt-pair-table {
+        min-width: 520px;
+      }
+
+      .gt-pair-table th,
+      .gt-pair-table td,
+      .gt-pair-table tbody td:first-child {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .gt-pair-table th:first-child,
+      .gt-pair-table td:first-child {
+        width: 50%;
+      }
+
+      .gt-pair-table audio {
+        margin: 0 auto;
       }
 
       .group-row td {
@@ -317,6 +342,10 @@
         font-size: 14px;
         line-height: 1.6;
       }
+
+      .references p + p {
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -355,9 +384,11 @@
           This demo page presents qualitative retrieval cases for StemPrint.
           StemPrint separates music into source stems and compares stem-level
           fingerprints to improve track-level sample retrieval. Each case
-          shows ranking and summary figures side by side, followed by audio
-          segments selected from the highest-scoring query-reference segment
-          pair between the query and each model's top-1 reference track.
+          shows inference examples from the Sample100 evaluation dataset:
+          ranking and summary figures side by side, ground-truth
+          sampling-original segment pairs, and model-predicted audio segments
+          selected from the highest-scoring query-reference segment pair
+          between the query and each model's top-1 reference track.
         </p>
       </section>
 
@@ -371,6 +402,10 @@
           self-supervised graph neural network," Proceedings of the 26th
           International Society for Music Information Retrieval Conference,
           pp. 511-517, 2025.
+        </p>
+        <p>
+          [2] Sample100: J. Van Balen, "Automatic Recognition of Samples in
+          Musical Audio," Master's thesis, Universitat Pompeu Fabra, 2011.
         </p>
       </section>
 
@@ -416,6 +451,8 @@
           sampleId: "S004",
           queryTrack: "T006",
           referenceTrack: "T005",
+          samplingTrack: "T006",
+          originalTrack: "T005",
           rows: {
             S1: { type: "drums", referenceTrack: "T005" },
             S2: { type: "bass", referenceTrack: "T083" },
@@ -431,6 +468,8 @@
           sampleId: "S124",
           queryTrack: "T051",
           referenceTrack: "T052",
+          samplingTrack: "T051",
+          originalTrack: "T052",
           alerts: [
             { color: "red", text: "Although S1, S4, and S5 incorrectly rank T162 at top-1, the predicted drum segment sounds highly similar to the sampled query segment." },
             { color: "blue", text: "This case helps explain why S4 can obtain higher top-3 hit-rate behavior than S1." }
@@ -450,6 +489,8 @@
           sampleId: "S037",
           queryTrack: "T061",
           referenceTrack: "T060",
+          samplingTrack: "T061",
+          originalTrack: "T060",
           rows: {
             S1: { type: "bass", referenceTrack: "T060" },
             S2: { type: "bass", referenceTrack: "T060" },
@@ -465,6 +506,8 @@
           sampleId: "S038",
           queryTrack: "T063",
           referenceTrack: "T062",
+          samplingTrack: "T063",
+          originalTrack: "T062",
           rows: {
             S1: { type: "drums", referenceTrack: "T062" },
             S2: { type: "drums", referenceTrack: "T062" },
@@ -480,6 +523,8 @@
           sampleId: "S083",
           queryTrack: "T152",
           referenceTrack: "T145",
+          samplingTrack: "T152",
+          originalTrack: "T145",
           rows: {
             S1: { type: "drums", referenceTrack: "T145" },
             S2: { type: "other", referenceTrack: "T011" },
@@ -496,6 +541,8 @@
           mode: "Easy Mode",
           queryTrack: "T004",
           referenceTrack: "T003",
+          samplingTrack: "T004",
+          originalTrack: "T003",
           rows: {
             S1: { type: "bass", referenceTrack: "T003" },
             S2: { type: "drums", referenceTrack: "T003" },
@@ -512,6 +559,8 @@
           mode: "Hard Mode",
           queryTrack: "T109",
           referenceTrack: "T108",
+          samplingTrack: "T109",
+          originalTrack: "T108",
           rows: {
             S1: { type: "drums", referenceTrack: "T070" },
             S2: { type: "other", referenceTrack: "T015" },
@@ -529,6 +578,10 @@
         return `final_case_audios/${sampleId}_${modelId}_${type}_${role}_${trackId}_segment.wav`;
       }
 
+      function gtPairAudioPath(sampleId, trackId) {
+        return `gt_pair_audios/${sampleId}_${trackId}_gt_pair_segment.wav`;
+      }
+
       function audioCell(sample, modelId, row, role) {
         const trackId = role === "query" ? sample.queryTrack : row.referenceTrack;
         const stem = modelId.startsWith("S")
@@ -539,6 +592,13 @@
           <audio controls preload="none" src="${audioPath(sample.sampleId, modelId, row.type, role, trackId)}"></audio>
           <span class="track-meta">${trackId}: ${tracks[trackId].name}</span>
           ${stem}
+        `;
+      }
+
+      function gtPairCell(sample, trackId) {
+        return `
+          <audio controls preload="none" src="${gtPairAudioPath(sample.sampleId, trackId)}"></audio>
+          <span class="track-meta">${trackId}: ${tracks[trackId].name}</span>
         `;
       }
 
@@ -585,9 +645,30 @@
       }
 
       function modeLabel(mode) {
-        if (mode === "Easy Mode") return "😎 Easy Case";
-        if (mode === "Hard Mode") return "😵‍💫 Hard Case";
+        if (mode === "Easy Mode") return "😎 Easy Mode";
+        if (mode === "Hard Mode") return "😵‍💫 Hard Mode";
         return mode;
+      }
+
+      function renderGtPairTable(sample) {
+        return `
+          <div class="gt-table-wrap">
+            <table class="gt-pair-table">
+              <thead>
+                <tr>
+                  <th>Sampling</th>
+                  <th>Original</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${gtPairCell(sample, sample.samplingTrack)}</td>
+                  <td>${gtPairCell(sample, sample.originalTrack)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
       }
 
       function renderCase(sample) {
@@ -618,6 +699,8 @@
                 <img src="final_case_figures/${sample.sampleId}_summary.png" alt="${sample.sampleId} summary results">
               </figure>
             </div>
+
+            ${renderGtPairTable(sample)}
 
             <div class="audio-table-wrap">
               <table>
