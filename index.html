@@ -169,19 +169,43 @@
 
       th:first-child,
       td:first-child {
+        width: 160px;
+      }
+
+      th:nth-child(2),
+      td:nth-child(2) {
         width: 96px;
+      }
+
+      .representation {
+        background: var(--panel);
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.35;
+        text-align: center;
+        vertical-align: middle;
       }
 
       .model-id {
         display: inline-flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         min-width: 44px;
-        min-height: 30px;
+        min-height: 34px;
         border-radius: 6px;
         background: var(--accent-soft);
         color: var(--accent);
         font-weight: 700;
+      }
+
+      .model-note {
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.1;
       }
 
       audio {
@@ -330,21 +354,44 @@
         `;
       }
 
-      function renderCase(sample) {
-        const rows = modelOrder.map((modelId) => {
+      function modelLabel(modelId) {
+        const note = modelId === "S1"
+          ? "(Proposed)"
+          : modelId === "M1"
+            ? "(Baseline)"
+            : "";
+
+        return `
+          <span class="model-id">
+            ${modelId}
+            ${note ? `<span class="model-note">${note}</span>` : ""}
+          </span>
+        `;
+      }
+
+      function renderRows(sample, models, representation) {
+        return models.map((modelId, index) => {
           const row = sample.rows[modelId];
           return `
             <tr>
-              <td><span class="model-id">${modelId}</span></td>
+              ${index === 0 ? `<td class="representation" rowspan="${models.length}">${representation}</td>` : ""}
+              <td>${modelLabel(modelId)}</td>
               <td>${audioCell(sample, modelId, row, "query")}</td>
               <td>${audioCell(sample, modelId, row, "reference")}</td>
             </tr>
           `;
         }).join("");
+      }
+
+      function renderCase(sample) {
+        const rows = [
+          renderRows(sample, ["S1", "S2", "S3", "S4", "S5"], "Stem-Level Fingerprint"),
+          renderRows(sample, ["M1", "M2", "M3"], "Mixture-Level Fingerprint")
+        ].join("");
 
         return `
           <article class="case" id="${sample.sampleId}">
-            <h2>${tracks[sample.queryTrack]}</h2>
+            <h2>${sample.sampleId} · ${tracks[sample.queryTrack]}</h2>
             <p class="reference">
               Ground-truth reference: ${tracks[sample.referenceTrack]}
             </p>
@@ -364,6 +411,7 @@
               <table>
                 <thead>
                   <tr>
+                    <th>Representation</th>
                     <th>Model</th>
                     <th>Query</th>
                     <th>Top-1 reference</th>
