@@ -55,11 +55,18 @@
       }
 
       .lead {
-        max-width: 720px;
         margin: 24px 0 0;
         color: var(--muted);
         font-size: 20px;
         line-height: 1.55;
+      }
+
+      .paper-title {
+        margin: 18px 0 0;
+        color: var(--ink);
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.35;
       }
 
       section {
@@ -74,7 +81,6 @@
       }
 
       p {
-        max-width: 760px;
         margin: 0;
         color: var(--muted);
         line-height: 1.65;
@@ -213,7 +219,8 @@
 
       .paper-figure img {
         display: block;
-        width: 100%;
+        width: 80%;
+        margin: 0 auto;
         height: auto;
       }
 
@@ -229,7 +236,6 @@
       }
 
       .case-alert {
-        max-width: 920px;
         margin-bottom: 8px;
         font-size: 16px;
         font-weight: 700;
@@ -297,11 +303,9 @@
       <header>
         <p class="eyebrow">Review-stage demo</p>
         <h1>🫆 StemPrint Demo</h1>
-        <p class="lead">
-          Demo page for the paper "StemPrint: Stem-Aware Audio Fingerprinting
-          for Automatic Sample Identification." This page presents qualitative
-          retrieval cases with ranking results, model summaries, and selected
-          query-reference audio segments.
+        <p class="paper-title">
+          StemPrint: Stem-Aware Audio Fingerprinting for Automatic Sample
+          Identification
         </p>
         <p class="authors">
           Jongsoo Kim, Woojin Kang, and Juhan Nam<br>
@@ -314,7 +318,8 @@
 
       <section>
         <h2>Overview</h2>
-        <p>
+        <p class="lead">
+          This demo page presents qualitative retrieval cases for StemPrint.
           StemPrint separates music into source stems and compares stem-level
           fingerprints to improve track-level sample retrieval. Each case
           shows ranking and summary figures side by side, followed by audio
