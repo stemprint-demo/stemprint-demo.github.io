@@ -107,8 +107,38 @@
         margin-bottom: 8px;
       }
 
+      .case-heading {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .case-heading h2 {
+        margin: 0;
+      }
+
+      .mode-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 0 10px;
+        border-radius: 6px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
       .reference {
+        margin-bottom: 8px;
+      }
+
+      .case-note {
         margin-bottom: 24px;
+        color: var(--muted);
+        font-size: 14px;
       }
 
       .figure-pair {
@@ -244,7 +274,7 @@
           fingerprints to improve track-level sample retrieval. Each case
           shows ranking and summary figures side by side, followed by audio
           segments selected from the highest-scoring query-reference segment
-          pair for each model.
+          pair between the query and each model's top-1 reference track.
         </p>
       </section>
 
@@ -256,22 +286,54 @@
     </main>
     <script>
       const tracks = {
+        T002: "Les Demerle - A Day in the Life",
+        T003: "David Axelrod - Holy Thursday",
+        T004: "Lil Wayne - Dr. Carter",
+        T005: "Clyde McPhatter - Mixed Up Cup",
+        T006: "Common - In My Own World (Check the Method)",
         T007: "Monty Alexander - Love and Happiness",
         T011: "Bill Withers - Grandma's Hands",
+        T014: "Menahan Street Band - Make the Road by Walking",
         T015: "Lou Reed - Walk on the Wild Side",
         T021: "The Whispers - And the Beat Goes On",
+        T025: "The Charmels - As Long as I've Got You",
+        T029: "Wendy Rene - After Laughter (Comes Tears)",
+        T040: "Freddie Scott - You Got What I Need",
+        T051: "Nas - Memory Lane (Sittin' in Da Park)",
         T060: "Bobby Caldwell - Open Your Eyes",
         T061: "Common - The Light",
         T062: "Dido - Thank You",
         T063: "Eminem - Stan",
         T070: "Hossam Ramzy - Khusara Khusara",
+        T083: "James Brown - Funky Drummer",
         T104: "Lamont Dozier - Take off your make up",
+        T109: "DJ Qbert - Eight",
+        T112: "Rufus Thomas - The Breakdown (part 2)",
         T119: "Orange Krush - Action",
-        T179: "Beastie Boys - Brass Monkey",
-        T180: "Wild Sugar - Bring it Here"
+        T145: "Barry White - I'm gonna love you just a little more baby",
+        T148: "Johnny Pate - Shaft in Africa",
+        T152: "Nas - One Mic",
+        T160: "Bobby Byrd - I Know You Got Soul",
+        T162: "Joe Tex - Papa Was Too",
+        T193: "Dyke & The Blazers - Let a woman be a woman let a man be a man"
       };
 
       const cases = [
+        {
+          sampleId: "S004",
+          queryTrack: "T006",
+          referenceTrack: "T005",
+          rows: {
+            S1: { type: "drums", referenceTrack: "T005" },
+            S2: { type: "bass", referenceTrack: "T083" },
+            S3: { type: "drums", referenceTrack: "T040" },
+            S4: { type: "bass", referenceTrack: "T029" },
+            S5: { type: "drums", referenceTrack: "T083" },
+            M1: { type: "mixture", referenceTrack: "T007" },
+            M2: { type: "mixture", referenceTrack: "T007" },
+            M3: { type: "mixture", referenceTrack: "T014" }
+          }
+        },
         {
           sampleId: "S037",
           queryTrack: "T061",
@@ -303,18 +365,66 @@
           }
         },
         {
-          sampleId: "S103",
-          queryTrack: "T179",
-          referenceTrack: "T180",
+          sampleId: "S083",
+          queryTrack: "T152",
+          referenceTrack: "T145",
           rows: {
-            S1: { type: "drums", referenceTrack: "T180" },
-            S2: { type: "drums", referenceTrack: "T180" },
-            S3: { type: "drums", referenceTrack: "T021" },
-            S4: { type: "drums", referenceTrack: "T180" },
-            S5: { type: "other", referenceTrack: "T119" },
-            M1: { type: "mixture", referenceTrack: "T070" },
-            M2: { type: "mixture", referenceTrack: "T070" },
-            M3: { type: "mixture", referenceTrack: "T070" }
+            S1: { type: "drums", referenceTrack: "T145" },
+            S2: { type: "other", referenceTrack: "T011" },
+            S3: { type: "drums", referenceTrack: "T060" },
+            S4: { type: "drums", referenceTrack: "T145" },
+            S5: { type: "drums", referenceTrack: "T060" },
+            M1: { type: "mixture", referenceTrack: "T007" },
+            M2: { type: "mixture", referenceTrack: "T007" },
+            M3: { type: "mixture", referenceTrack: "T160" }
+          }
+        },
+        {
+          sampleId: "S124",
+          queryTrack: "T051",
+          referenceTrack: "T162",
+          note: "A short case where S4 can exceed S1 in top-3 hit-rate behavior.",
+          rows: {
+            S1: { type: "drums", referenceTrack: "T162" },
+            S2: { type: "drums", referenceTrack: "T002" },
+            S3: { type: "bass", referenceTrack: "T029" },
+            S4: { type: "drums", referenceTrack: "T162" },
+            S5: { type: "drums", referenceTrack: "T162" },
+            M1: { type: "mixture", referenceTrack: "T007" },
+            M2: { type: "mixture", referenceTrack: "T025" },
+            M3: { type: "mixture", referenceTrack: "T029" }
+          }
+        },
+        {
+          sampleId: "S002",
+          mode: "Easy Mode",
+          queryTrack: "T004",
+          referenceTrack: "T003",
+          rows: {
+            S1: { type: "bass", referenceTrack: "T003" },
+            S2: { type: "drums", referenceTrack: "T003" },
+            S3: { type: "bass", referenceTrack: "T003" },
+            S4: { type: "bass", referenceTrack: "T003" },
+            S5: { type: "bass", referenceTrack: "T003" },
+            M1: { type: "mixture", referenceTrack: "T003" },
+            M2: { type: "mixture", referenceTrack: "T003" },
+            M3: { type: "mixture", referenceTrack: "T003" }
+          }
+        },
+        {
+          sampleId: "S067",
+          mode: "Hard Mode",
+          queryTrack: "T109",
+          referenceTrack: "T070",
+          rows: {
+            S1: { type: "drums", referenceTrack: "T070" },
+            S2: { type: "other", referenceTrack: "T015" },
+            S3: { type: "drums", referenceTrack: "T148" },
+            S4: { type: "bass", referenceTrack: "T062" },
+            S5: { type: "bass", referenceTrack: "T193" },
+            M1: { type: "mixture", referenceTrack: "T119" },
+            M2: { type: "mixture", referenceTrack: "T112" },
+            M3: { type: "mixture", referenceTrack: "T160" }
           }
         }
       ];
@@ -374,10 +484,14 @@
 
         return `
           <article class="case" id="${sample.sampleId}">
-            <h2>${sample.sampleId}) ${tracks[sample.queryTrack]}</h2>
+            <div class="case-heading">
+              <h2>${sample.sampleId}) ${tracks[sample.queryTrack]}</h2>
+              ${sample.mode ? `<span class="mode-badge">${sample.mode}</span>` : ""}
+            </div>
             <p class="reference">
               Ground-truth reference: ${tracks[sample.referenceTrack]}
             </p>
+            ${sample.note ? `<p class="case-note">${sample.note}</p>` : `<div class="case-note"></div>`}
 
             <div class="figure-pair" aria-label="${sample.sampleId} figures">
               <figure>
