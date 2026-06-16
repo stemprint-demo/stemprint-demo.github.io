@@ -384,7 +384,7 @@
           This demo page presents qualitative retrieval cases for StemPrint.
           StemPrint separates music into source stems and compares stem-level
           fingerprints to improve track-level sample retrieval. Each case
-          shows inference examples from the Sample100 evaluation dataset:
+          shows inference examples from the Sample100[1] evaluation dataset:
           ranking and summary figures side by side, ground-truth
           sampling-original segment pairs, and model-predicted audio segments
           selected from the highest-scoring query-reference segment pair
@@ -397,15 +397,15 @@
       <section class="references">
         <h2>References</h2>
         <p>
-          [1] Baseline (M1): A. Bhattacharjee, I. M. Higgs, M. Sandler, and
+          [1] Sample100: J. Van Balen, "Automatic Recognition of Samples in
+          Musical Audio," Master's thesis, Universitat Pompeu Fabra, 2011.
+        </p>
+        <p>
+          [2] Baseline (M1): A. Bhattacharjee, I. M. Higgs, M. Sandler, and
           E. Benetos, "Refining music sample identification with a
           self-supervised graph neural network," Proceedings of the 26th
           International Society for Music Information Retrieval Conference,
           pp. 511-517, 2025.
-        </p>
-        <p>
-          [2] Sample100: J. Van Balen, "Automatic Recognition of Samples in
-          Musical Audio," Master's thesis, Universitat Pompeu Fabra, 2011.
         </p>
       </section>
 
@@ -645,8 +645,8 @@
       }
 
       function modeLabel(mode) {
-        if (mode === "Easy Mode") return "😎 Easy Mode";
-        if (mode === "Hard Mode") return "😵‍💫 Hard Mode";
+        if (mode === "Easy Mode") return "😎 Easy Case";
+        if (mode === "Hard Mode") return "😵‍💫 Hard Case";
         return mode;
       }
 
